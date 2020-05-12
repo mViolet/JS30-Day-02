@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+        <div class="circle"></div>
+      </div>
+    </div>
+
+  <style>
+    html {
+      background: #018DED url(https://images.unsplash.com/photo-1472289065668-ce650ac443d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+         background: rgb(255,255,255);
+         background: linear-gradient(130deg, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.6) 35%, rgba(255,255,255,0.3) 100%); 
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(61,37,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px rgb(61,37,0),
+        0 0 10px rgba(61,37,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .second-hand {
+      background: white;
+    }
+
+    .min-hand {
+      background: #444044;
+    }
+
+    .hour-hand {
+      background: #444044;
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100%; /* default is at 50% */
+      transform: rotate(90deg); /* set initial position of hands */
+      transition: all 0.3s;
+      transition-timing-function: cubic-bezier(1, 0.74, 1, 1.58); /* mimic clock hand movement*/
+
+    }
+
+    .circle {
+      width: 8%;
+      height: 8%;
+      background: white;
+      border-radius: 100%;
+      position: absolute;
+      top: 47%;
+      left: 46%;
+    }
+
+  </style>
+
+  <script>
+/* get elements with second-hand, min-hand, and hour-hand classes */
+    const secondHand = document.querySelector('.second-hand');
+    const minuteHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+
+/* this function sets the hands to match the current time */
+    function setDate() { 
+      /* set up constants to get seconds, minutes, hours from Date object*/
+      const meow = new Date();
+      const seconds = meow.getSeconds();
+      const minutes = meow.getMinutes();
+      const hours = meow.getHours();
+
+      /* convert seconds, minutes, hours to degrees (add 90 to account for default position in CSS) */
+      const secondsDegrees = ((seconds / 60) * 360) + 90;
+      const minutesDegrees = ((minutes / 60) * 360) + 90;
+      const hoursDegrees = ((hours / 12) * 360) + 90;
+
+      /* apply transformation to appropriate classes */
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+      minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+      hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+
+      /* if statements to fix bounce at 0 degrees */
+      if (secondsDegrees == 90) {
+        secondHand.style.transition = `none`;
+      }
+      if (secondsDegrees > 90) {
+        secondHand.style.transition = `all 0.3s`;
+      }
+
+      if (minutesDegrees == 90) {
+        minuteHand.style.transition = `none`;
+      }
+      if (minutesDegrees > 90) {
+        minuteHand.style.transition = `all 0.3s`;
+      }
+
+      if (hoursDegrees == 90) {
+        hourHand.style.transition = `none`;
+      }
+      if (hoursDegrees > 90) {
+        hourHand.style.transition = `all 0.3s`;
+      }
+
+      /* shows current seconds, minutes, hours in console */
+      console.log(secondsDegrees, minutesDegrees, hoursDegrees);
+    }
+
+    setInterval(setDate, 1000);   /* 1000 miliseconds = 1 second */
+
+  </script>
+</body>
+</html>
